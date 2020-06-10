@@ -70,7 +70,7 @@ func TestSetData(t *testing.T) {
 	assert.Equal(t, "test_value", botData.Current["test_data"])
 }
 
-func TestResetAllData(t *testing.T) {
+func TestResetCurrentState(t *testing.T) {
 	mockRedis()
 
 	userId := 111
@@ -83,18 +83,16 @@ func TestResetAllData(t *testing.T) {
 	botData := &botstate.BotData{}
 
 	botData.User(userId)
+	botData.SetCurrentState("test_state")
+	botData.SetStateWithCallback("test_state")
+	botData.SetData(data)
 
-	err := botData.SetData(data)
+	err := botData.ResetCurrentState()
 	assert.Nil(t, err)
-
-	for key, value := range data {
-		assert.Equal(t, value, botData.Current[key])
-	}
-
-	err = botData.ResetAll()
-	assert.Nil(t, err)
+	assert.Empty(t, botData.Current["current_state"])
+	assert.Empty(t, botData.Current["state_with_callback"])
 
 	for key := range data {
-		assert.Empty(t, botData.Current[key])
+		assert.NotEmpty(t, botData.Current[key])
 	}
 }

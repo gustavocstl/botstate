@@ -14,7 +14,7 @@ type Storager interface {
 	SetValues(key string, values ...interface{}) error
 	GetValue(key string, valueName string) (string, error)
 	GetAllValues(key string) (Data, error)
-	ResetAll(key string) error
+	ResetCurrentState(key string) error
 }
 
 //StorageClient is a global variable that receives current Storager
@@ -42,7 +42,13 @@ func DefaultStorage(redisClient *redis.Client) Storager {
 //BotData are used to control and manipulate current user data
 //Passed to Bot struct
 type BotData struct {
-	UserID  string
+	UserID string
+
+	//Current has default keys with values in map[string]:
+	//user_id is used to save current user id
+	//current_state is used to save user's current state
+	//state_with_callback is used to save name of state with callback to be executed in next call
+	//messages is used to save all messages during the execution flow
 	Current Data
 }
 
@@ -124,11 +130,11 @@ func (bd *BotData) GetData() (Data, error) {
 	return StorageClient.GetAllValues(bd.UserID)
 }
 
-//ResetAll reset all current user's data
-func (bd *BotData) ResetAll() error {
+//ResetCurrentState clear current state and callback state from user data
+func (bd *BotData) ResetCurrentState() error {
 	var err error
 
-	err = StorageClient.ResetAll(bd.UserID)
+	err = StorageClient.ResetCurrentState(bd.UserID)
 
 	if err != nil {
 		return err
