@@ -6,8 +6,10 @@ import (
 	"github.com/go-redis/redis/v7"
 )
 
+//Data are used to store all current user data
 type Data map[string]string
 
+//Storager is the interface that wraps the methods to manipulate current user data
 type Storager interface {
 	SetValues(key string, values ...interface{}) error
 	GetValue(key string, valueName string) (string, error)
@@ -15,6 +17,8 @@ type Storager interface {
 	ResetAll(key string) error
 }
 
+//StorageClient is a global variable that receives current Storager
+//All functions in BotData struct use StorageClient
 var StorageClient Storager
 
 //SetStorageClient accept as argument any storage client that meets the needs of the Storager interface.
@@ -35,20 +39,22 @@ func DefaultStorage(redisClient *redis.Client) Storager {
 	return RedisStorage{}
 }
 
+//BotData are used to control and manipulate current user data
+//Passed to Bot struct
 type BotData struct {
-	UserId  string
+	UserID  string
 	Current Data
 }
 
-//User initialize user's data if not exists and set the user_id in data with the argument userId.
+//User initialize user's data if not exists and set the user_id in data with the argument userID.
 //Returns error if exists
-func (bd *BotData) User(userId int) error {
+func (bd *BotData) User(userID int) error {
 	var err error
 
-	bd.UserId = strconv.Itoa(userId)
+	bd.UserID = strconv.Itoa(userID)
 
 	err = bd.SetData(Data{
-		"user_id": bd.UserId,
+		"user_id": bd.UserID,
 	})
 
 	if err != nil {
@@ -77,7 +83,7 @@ func (bd *BotData) SetCurrentState(name string) (string, error) {
 //GetCurrentState get the current_state value from the user's data.
 //This state is used to control where the user is in the bot flow.
 func (bd *BotData) GetCurrentState() (string, error) {
-	return StorageClient.GetValue(bd.UserId, "current_state")
+	return StorageClient.GetValue(bd.UserID, "current_state")
 }
 
 //SetStateWithCallback define new state to state_with_callback in user's data.
@@ -90,10 +96,10 @@ func (bd *BotData) SetStateWithCallback(name string) error {
 	return err
 }
 
-//GetCurrentState get the state_with_callback value from the user's data.
+//GetStateWithCallback get the state_with_callback value from the user's data.
 //This state is used to define callback in state execution.
 func (bd *BotData) GetStateWithCallback() (string, error) {
-	return StorageClient.GetValue(bd.UserId, "state_with_callback")
+	return StorageClient.GetValue(bd.UserID, "state_with_callback")
 }
 
 //SetData accepts type Data struct to define multiple values in user's data.
@@ -101,7 +107,7 @@ func (bd *BotData) SetData(values Data) error {
 	var err error
 
 	for key, value := range values {
-		err = StorageClient.SetValues(bd.UserId, key, value)
+		err = StorageClient.SetValues(bd.UserID, key, value)
 
 		if err != nil {
 			return err
@@ -115,14 +121,14 @@ func (bd *BotData) SetData(values Data) error {
 
 //GetData get all user's data.
 func (bd *BotData) GetData() (Data, error) {
-	return StorageClient.GetAllValues(bd.UserId)
+	return StorageClient.GetAllValues(bd.UserID)
 }
 
 //ResetAll reset all current user's data
 func (bd *BotData) ResetAll() error {
 	var err error
 
-	err = StorageClient.ResetAll(bd.UserId)
+	err = StorageClient.ResetAll(bd.UserID)
 
 	if err != nil {
 		return err

@@ -4,6 +4,11 @@ import (
 	"errors"
 )
 
+//State are used to save states
+//Name is the identifier of each state, so it must be unique.
+//Executes is the method to be executed when bot call state.
+//Callback is the method to be executed in the next state, commonly used to receive input data and validate it.
+//Next is the identifier to next state, it is added to user data after the call of Executes method.
 type State struct {
 	Name     string
 	Executes func(bot *Bot) bool
@@ -11,6 +16,8 @@ type State struct {
 	Next     string
 }
 
+//Bot are used to initialize states and control bot flow.
+//The methods in Executes and Callback in the states receive an instance of Bot struct
 type Bot struct {
 	States []State
 	Data   *BotData
@@ -38,7 +45,7 @@ func New(states []State) *Bot {
 func (b *Bot) ExecuteState(name string) (bool, error) {
 	for _, state := range b.States {
 		if state.Name == name {
-			if b.Data.UserId == "" {
+			if b.Data.UserID == "" {
 				return false, errors.New("Undefined user to execute state " + state.Name + ".")
 			}
 

@@ -11,10 +11,10 @@ import (
 func TestStateExecution(t *testing.T) {
 	mockRedis()
 
-	userId := 111
+	userID := 111
 	defaultFunc := func(bot *botstate.Bot) bool {
-		u, _ := strconv.Atoi(bot.Data.UserId)
-		return u == userId
+		u, _ := strconv.Atoi(bot.Data.UserID)
+		return u == userID
 	}
 
 	states := []botstate.State{
@@ -29,7 +29,7 @@ func TestStateExecution(t *testing.T) {
 	}
 
 	bot := botstate.New(states)
-	bot.Data.User(userId)
+	bot.Data.User(userID)
 
 	for _, state := range states {
 		execute, err := bot.ExecuteState(state.Name)
@@ -42,7 +42,7 @@ func TestStateExecution(t *testing.T) {
 func TestStateWithCallbacksExecution(t *testing.T) {
 	mockRedis()
 
-	userId := 111
+	userID := 111
 	timesToSimulateFailCallback := 2
 	failCallbackTimes := 0
 	productName := "Product Teste"
@@ -82,7 +82,7 @@ func TestStateWithCallbacksExecution(t *testing.T) {
 
 	bot := botstate.New(states)
 
-	bot.Data.User(userId)
+	bot.Data.User(userID)
 
 	//First execution
 	//Only to set state_with_callback to execute callback getProductName in next ExecuteState call
@@ -116,7 +116,7 @@ func TestStateWithCallbacksExecution(t *testing.T) {
 func TestForceChangeStateExecution(t *testing.T) {
 	mockRedis()
 
-	userId := 111
+	userID := 111
 
 	start := func(bot *botstate.Bot) bool {
 		return true
@@ -154,7 +154,7 @@ func TestForceChangeStateExecution(t *testing.T) {
 
 	bot := botstate.New(states)
 
-	bot.Data.User(userId)
+	bot.Data.User(userID)
 
 	_, err := bot.ExecuteState("start")
 
@@ -170,12 +170,12 @@ func TestForceChangeStateExecution(t *testing.T) {
 func TestStateExecutionFail(t *testing.T) {
 	mockRedis()
 
-	userId := 111
+	userID := 111
 
 	states := []botstate.State{}
 
 	bot := botstate.New(states)
-	err := bot.Data.User(userId)
+	err := bot.Data.User(userID)
 
 	assert.Nil(t, err)
 
@@ -203,9 +203,9 @@ func TestStateExecutionWithEmptyMethod(t *testing.T) {
 		{Name: "add_product"},
 	}
 
-	userId := 111
+	userID := 111
 	bot := botstate.New(states)
-	err := bot.Data.User(userId)
+	err := bot.Data.User(userID)
 
 	assert.Nil(t, err)
 
