@@ -126,7 +126,7 @@ func CallbackAddProduct(bot *botstate.Bot) bool {
 
 func Confirmation(bot *botstate.Bot) bool {
 	fmt.Println("Confirmation...")
-    bot.Data.ResetAll()
+	bot.Data.ResetCurrentState()
 	return true
 }
 
