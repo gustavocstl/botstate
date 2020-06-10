@@ -6,7 +6,7 @@ The easy way to manage bot states.
 ![Botstate](docs/botstate.png)
 
 ## Examples
-- [Chatbot API with bostate](https://github.com/gucastiliao/example-chatbot-botstate)
+- [Chatbot API with botstate](https://github.com/gucastiliao/example-chatbot-botstate)
 - [Chatbot - See botstate in action](https://web-chatbot-botstate.herokuapp.com/)
 
 ## Installation
