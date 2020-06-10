@@ -88,20 +88,26 @@ func main() {
 	bot.Data.User(111)
 
 	bot.ExecuteState("start")
-	// This print Start...
+	msg := bot.GetMessages()
+	fmt.Println(msg)
+	// This print [Hello! Starting...]
 
 	current, _ := bot.Data.GetCurrentState()
 	// Current state now is -> add_product
 	// Because value of State.Next
 
 	bot.ExecuteState(current)
-	// This print Add Product...
+	msg = bot.GetMessages()
+	fmt.Println(msg)
+	// This print [Add Product...]
 
 	current, _ = bot.Data.GetCurrentState()
 	// Current state now is -> confirmation
 
 	bot.ExecuteState(current)
-	// This print Callback Add Product... and Confirmation ...
+	msg = bot.GetMessages()
+	fmt.Println(msg)
+	// This print I'm in callback now and [Confirmation ...]
 	// The callback is defined in the previous state
 	// And in this execution is called
 	// If the callback return true, the execution continue and call Confirmation method
@@ -110,22 +116,33 @@ func main() {
 // botstate.Bot have access to current user's data
 // and can manipulate it
 func Start(bot *botstate.Bot) bool {
-	fmt.Println("Start...")
+	bot.SendMessage([]string{
+		"Hello!",
+		"Starting...",
+	})
+
 	return true
 }
 
 func AddProduct(bot *botstate.Bot) bool {
-	fmt.Println("Add Product...")
+	bot.SendMessage([]string{
+		"Add Product...",
+	})
+
 	return true
 }
 
 func CallbackAddProduct(bot *botstate.Bot) bool {
-	fmt.Println("Callback Add Product...")
+	fmt.Println("I'm in callback now!")
+
 	return true
 }
 
 func Confirmation(bot *botstate.Bot) bool {
-	fmt.Println("Confirmation...")
+	bot.SendMessage([]string{
+		"Confirmation...",
+	})
+
 	bot.Data.ResetCurrentState()
 	return true
 }
