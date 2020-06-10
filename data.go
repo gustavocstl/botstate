@@ -14,7 +14,6 @@ type Storager interface {
 	SetValues(key string, values ...interface{}) error
 	GetValue(key string, valueName string) (string, error)
 	GetAllValues(key string) (Data, error)
-	ResetCurrentState(key string) error
 }
 
 //StorageClient is a global variable that receives current Storager
@@ -134,7 +133,9 @@ func (bd *BotData) GetData() (Data, error) {
 func (bd *BotData) ResetCurrentState() error {
 	var err error
 
-	err = StorageClient.ResetCurrentState(bd.UserID)
+	err = StorageClient.SetValues(bd.UserID, "current_state", "")
+	err = StorageClient.SetValues(bd.UserID, "state_with_callback", "")
+	err = StorageClient.SetValues(bd.UserID, "messages", "")
 
 	if err != nil {
 		return err

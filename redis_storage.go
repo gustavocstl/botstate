@@ -24,13 +24,3 @@ func (r RedisStorage) GetValue(key string, valueName string) (string, error) {
 func (r RedisStorage) GetAllValues(key string) (Data, error) {
 	return RedisClient.HGetAll(key).Result()
 }
-
-//ResetCurrentState clear current state and callback state from user data
-func (r RedisStorage) ResetCurrentState(key string) error {
-	var err error
-
-	err = r.SetValues(key, "current_state", "")
-	err = r.SetValues(key, "state_with_callback", "")
-
-	return err
-}
