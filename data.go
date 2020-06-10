@@ -135,7 +135,6 @@ func (bd *BotData) ResetCurrentState() error {
 
 	err = StorageClient.SetValues(bd.UserID, "current_state", "")
 	err = StorageClient.SetValues(bd.UserID, "state_with_callback", "")
-	err = StorageClient.SetValues(bd.UserID, "messages", "")
 
 	if err != nil {
 		return err
