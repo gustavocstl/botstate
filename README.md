@@ -1,4 +1,4 @@
-# Botstate for Golang
+# Botstate
 
 The easy way to manage bot states.
 
@@ -131,3 +131,7 @@ func Confirmation(bot *botstate.Bot) bool {
 }
 
 ```
+
+## See more
+
+- [Docs](https://pkg.go.dev/github.com/gucastiliao/botstate?tab=doc)
