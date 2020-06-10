@@ -1,6 +1,7 @@
 package botstate
 
 import (
+	"encoding/json"
 	"errors"
 )
 
@@ -113,4 +114,49 @@ func (b *Bot) executeCallbackFromState(name string) bool {
 	}
 
 	return true
+}
+
+//SendMessage save messages to user data
+//Can be used to return messages after bot execution
+func (b *Bot) SendMessage(messages []string) error {
+	if len(messages) <= 0 {
+		return errors.New("undefined messages")
+	}
+
+	j, err := json.Marshal(messages)
+
+	if err != nil {
+		return err
+	}
+
+	err = b.Data.SetData(Data{
+		"messages": string(j),
+	})
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+//GetMessages return all messages saved in user data
+//This messages is from bot, saved during execution flow
+//Calling GetMessages will return messages and remove from data
+func (b *Bot) GetMessages() []string {
+	var messages []string
+
+	m, _ := b.Data.Current["messages"]
+
+	err := json.Unmarshal([]byte(m), &messages)
+
+	b.Data.SetData(Data{
+		"messages": "",
+	})
+
+	if err == nil {
+		return messages
+	}
+
+	return []string{}
 }

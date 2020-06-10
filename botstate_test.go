@@ -122,7 +122,7 @@ func TestForceChangeStateExecution(t *testing.T) {
 		return true
 	}
 	end := func(bot *botstate.Bot) bool {
-		bot.Data.ResetAll()
+		bot.Data.ResetCurrentState()
 		bot.ExecuteState("lost_state")
 
 		return false
@@ -163,8 +163,74 @@ func TestForceChangeStateExecution(t *testing.T) {
 	_, err = bot.ExecuteState(bot.Data.Current["current_state"])
 
 	assert.Nil(t, err)
+	assert.Equal(t, strconv.Itoa(userID), bot.Data.Current["user_id"])
 	assert.Equal(t, "lost_state", bot.Data.Current["current_state"])
 	assert.Equal(t, "ok", bot.Data.Current["lost_value"])
+}
+
+func TestSendMessageInStateExecution(t *testing.T) {
+	mockRedis()
+
+	userID := 111
+	messages := []string{
+		"Hello!",
+		"See, I can send multiple messages.",
+		"That's nice!",
+	}
+
+	bot := botstate.New([]botstate.State{
+		{
+			Name: "start",
+			Executes: func(bot *botstate.Bot) bool {
+				bot.SendMessage(messages)
+
+				return true
+			},
+		},
+	})
+
+	bot.Data.User(userID)
+
+	execute, err := bot.ExecuteState("start")
+
+	assert.Nil(t, err)
+	assert.True(t, execute)
+
+	botMessages := bot.GetMessages()
+	assert.Equal(t, 3, len(botMessages))
+
+	for k, m := range messages {
+		assert.Equal(t, m, botMessages[k])
+	}
+}
+
+func TestSendMessageFail(t *testing.T) {
+	mockRedis()
+
+	userID := 111
+
+	bot := botstate.New([]botstate.State{
+		{
+			Name: "start",
+			Executes: func(bot *botstate.Bot) bool {
+				err := bot.SendMessage([]string{})
+
+				assert.Equal(t, "undefined messages", err.Error())
+
+				return true
+			},
+		},
+	})
+
+	bot.Data.User(userID)
+
+	execute, err := bot.ExecuteState("start")
+
+	assert.Nil(t, err)
+	assert.True(t, execute)
+
+	botMessages := bot.GetMessages()
+	assert.Equal(t, 0, len(botMessages))
 }
 
 func TestStateExecutionFail(t *testing.T) {
