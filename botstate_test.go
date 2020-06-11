@@ -182,7 +182,10 @@ func TestSendMessageInStateExecution(t *testing.T) {
 		{
 			Name: "start",
 			Executes: func(bot *botstate.Bot) bool {
-				bot.SendMessage(messages)
+				for _, m := range messages {
+					//Loop to test multiple call
+					bot.SendMessage([]string{m})
+				}
 
 				return true
 			},

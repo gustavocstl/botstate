@@ -123,6 +123,8 @@ func (b *Bot) SendMessage(messages []string) error {
 		return errors.New("undefined messages")
 	}
 
+	messages = append(b.GetMessages(), messages...)
+
 	j, err := json.Marshal(messages)
 
 	if err != nil {
