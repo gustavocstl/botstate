@@ -2,6 +2,9 @@
 
 The easy way to manage bot states.
 
+[![Build Status](https://travis-ci.com/gucastiliao/botstate.svg?branch=master)](https://travis-ci.com/gucastiliao/botstate)
+[![GoDoc](https://godoc.org/github.com/gucastiliao/botstate?status.svg)](https://pkg.go.dev/github.com/gucastiliao/botstate?tab=doc)
+
 ## Simple Bot Flow with Botstate
 ![Botstate](docs/botstate.png)
 
