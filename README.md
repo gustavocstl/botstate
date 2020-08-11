@@ -123,7 +123,7 @@ func main() {
 // botstate.Bot have access to current user's data
 // and can manipulate it
 func Start(bot *botstate.Bot) bool {
-	bot.SendMessage([]string{
+	bot.AddMessage([]string{
 		"Hello!",
 		"Starting...",
 	})
@@ -132,7 +132,7 @@ func Start(bot *botstate.Bot) bool {
 }
 
 func AddProduct(bot *botstate.Bot) bool {
-	bot.SendMessage([]string{
+	bot.AddMessage([]string{
 		"Add Product...",
 	})
 
@@ -146,7 +146,7 @@ func CallbackAddProduct(bot *botstate.Bot) bool {
 }
 
 func Confirmation(bot *botstate.Bot) bool {
-	bot.SendMessage([]string{
+	bot.AddMessage([]string{
 		"Confirmation...",
 	})
 

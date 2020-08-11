@@ -168,7 +168,7 @@ func TestForceChangeStateExecution(t *testing.T) {
 	assert.Equal(t, "ok", bot.Data.Current["lost_value"])
 }
 
-func TestSendMessageInStateExecution(t *testing.T) {
+func TestAddMessageInStateExecution(t *testing.T) {
 	mockRedis()
 
 	userID := 111
@@ -184,7 +184,7 @@ func TestSendMessageInStateExecution(t *testing.T) {
 			Executes: func(bot *botstate.Bot) bool {
 				for _, m := range messages {
 					//Loop to test multiple call
-					bot.SendMessage([]string{m})
+					bot.AddMessage([]string{m})
 				}
 
 				return true
@@ -207,7 +207,7 @@ func TestSendMessageInStateExecution(t *testing.T) {
 	}
 }
 
-func TestSendMessageFail(t *testing.T) {
+func TestAddMessageFail(t *testing.T) {
 	mockRedis()
 
 	userID := 111
@@ -216,7 +216,7 @@ func TestSendMessageFail(t *testing.T) {
 		{
 			Name: "start",
 			Executes: func(bot *botstate.Bot) bool {
-				err := bot.SendMessage([]string{})
+				err := bot.AddMessage([]string{})
 
 				assert.Equal(t, "undefined messages", err.Error())
 

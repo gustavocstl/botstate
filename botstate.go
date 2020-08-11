@@ -116,9 +116,9 @@ func (b *Bot) executeCallbackFromState(name string) bool {
 	return true
 }
 
-//SendMessage save messages to user data
+//AddMessage save messages to user data
 //Can be used to return messages after bot execution
-func (b *Bot) SendMessage(messages []string) error {
+func (b *Bot) AddMessage(messages []string) error {
 	if len(messages) <= 0 {
 		return errors.New("undefined messages")
 	}
